@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class RocketController : MonoBehaviour
+public class RocketShipController : MonoBehaviour
 {
     #region Variables Declaration
     [Header("Movement and Rotation Speeds")]
