@@ -1,15 +1,17 @@
-﻿using System.Collections;
+﻿#define DEBUG_RocketShipController
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(AudioSource))]
 public class RocketShipController : MonoBehaviour
 {
     #region Variables Declaration
     [Header("Movement and Rotation Speeds")]
-    [SerializeField] private float _movementSpeed = 10f;
-    [SerializeField] private float _rotationSpeed = 20f;
-
+    [SerializeField] private float _movementSpeed;
+    [SerializeField] private float _rotationSpeed;
     [SerializeField] private AudioClip _audioClip;
 
     private AudioSource _audioSource;
@@ -63,6 +65,51 @@ public class RocketShipController : MonoBehaviour
 
     #endregion
 
+    #region Collision Detection
+
+    private void OnCollisionEnter(Collision collision)
+    {
+
+        switch (collision.gameObject.tag)
+        {
+            case "LaunchingPad":
+#if DEBUG_RocketShipController
+                Debug.Log("Ship is on LaunchingPad");
+#endif
+                break;
+            case "LandingPad":
+#if DEBUG_RocketShipController
+                Debug.Log("Ship is on LandingPad");
+#endif
+                break;
+
+            default:
+#if DEBUG_RocketShipController
+                Debug.Log("Death");
+#endif
+                break;
+
+        }
+    }
+
+
+    private void OnCollisionExit(Collision collision)
+    {
+        switch (collision.gameObject.tag)
+        {
+            case "LaunchingPad":
+#if DEBUG_RocketShipController
+                Debug.Log("Ship is airborne");
+#endif
+                break;
+        }
+    }
+
+    #endregion
+
+
+    #region Audio
+
     private void PlayAudio(AudioClip index)
     {
         if (_verticalInput > 0 && !_audioSource.isPlaying)
@@ -94,5 +141,6 @@ public class RocketShipController : MonoBehaviour
     //    audioSource.volume = startVolume;
     //}
 
+    #endregion
 
 }
