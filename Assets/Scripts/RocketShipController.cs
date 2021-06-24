@@ -87,6 +87,7 @@ public class RocketShipController : MonoBehaviour
 #if DEBUG_RocketShipController
                 Debug.Log("Death");
 #endif
+                Destroy(gameObject);
                 break;
 
         }
