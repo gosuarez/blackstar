@@ -3,22 +3,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(AudioSource))]
 public class RocketShipController : MonoBehaviour
 {
     #region Variables Declaration
-    [Header("Movement and Rotation Speeds")]
+    [Header("Set in Inspector")]
+    [Range(5,15)]
     [SerializeField] private float _movementSpeed;
+    [Range(200, 300)]
     [SerializeField] private float _rotationSpeed;
     [SerializeField] private AudioClip _audioClip;
 
     private AudioSource _audioSource;
-    //private float _startVolume;
     private Rigidbody _rigidbody;
     private float _horizontalInput;
     private float _verticalInput;
+
+    public event Action HitByObtacle;
 
     #endregion
 
@@ -27,7 +31,6 @@ public class RocketShipController : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _audioSource = GetComponent<AudioSource>();
-        //_startVolume = _audioSource.volume;
     }
 
     // Update is called once per frame
@@ -83,16 +86,25 @@ public class RocketShipController : MonoBehaviour
 #endif
                 break;
 
-            default:
+            case "Obstacle":
 #if DEBUG_RocketShipController
                 Debug.Log("Death");
 #endif
-                Destroy(gameObject);
-                break;
+                TakeHit();
 
+                break;
         }
     }
 
+    private void TakeHit()
+    {
+        if (HitByObtacle != null)
+        {
+            HitByObtacle();
+        }
+
+        Destroy(gameObject);
+    }
 
     private void OnCollisionExit(Collision collision)
     {
@@ -108,7 +120,6 @@ public class RocketShipController : MonoBehaviour
 
     #endregion
 
-
     #region Audio
 
     private void PlayAudio(AudioClip index)
@@ -122,25 +133,8 @@ public class RocketShipController : MonoBehaviour
         else if (_verticalInput <= 0 && _audioSource.isPlaying)
         {
             _audioSource.Stop();
-            //StartCoroutine(FadeSoundOUt(_audioSource, 0.5f));
         }
     }
-
-    //Fades out the sound of the rocket while vertical input is not pressed, but it does not work right. Needs more work 
-    //private IEnumerator FadeSoundOUt(AudioSource audioSource, float fadeTime)
-    //{
-    //    float startVolume = _startVolume;
-
-    //    while (audioSource.volume > 0)
-    //    {
-    //        audioSource.volume -= startVolume * Time.deltaTime / fadeTime;
-
-    //        yield return null;
-    //    }
-
-    //    audioSource.Stop();
-    //    audioSource.volume = startVolume;
-    //}
 
     #endregion
 
