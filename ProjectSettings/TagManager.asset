@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - LandingPad
   - LaunchingPad
+  - Obstacle
   layers:
   - Default
   - TransparentFX
