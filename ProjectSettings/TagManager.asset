@@ -10,6 +10,7 @@ TagManager:
   - LandingPad
   - LaunchingPad
   - Obstacle
+  - Rocket Ship
   layers:
   - Default
   - TransparentFX

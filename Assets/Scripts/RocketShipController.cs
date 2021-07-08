@@ -12,10 +12,15 @@ public class RocketShipController : MonoBehaviour
     #region Variables Declaration
     [Header("Set in Inspector")]
     [Range(5,15)]
-    [SerializeField] private float _movementSpeed;
+    [SerializeField] 
+    private float _movementSpeed;
+
     [Range(200, 300)]
-    [SerializeField] private float _rotationSpeed;
-    [SerializeField] private AudioClip _audioClip;
+    [SerializeField] 
+    private float _rotationSpeed;
+
+    [SerializeField] 
+    private AudioClip _audioClip;
 
     private AudioSource _audioSource;
     private Rigidbody _rigidbody;
@@ -23,6 +28,12 @@ public class RocketShipController : MonoBehaviour
     private float _verticalInput;
 
     public event Action HitByObtacle;
+    public event Action<int> OnLandingPad;
+    private int level = 0;
+
+    [SerializeField] 
+    private enum State { Alive, Dying, Transcending }
+    State state;
 
     #endregion
 
@@ -36,9 +47,12 @@ public class RocketShipController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RocketControllerMovement();
-        RockectControllerRotation();
-        PlayAudio(_audioClip);
+        if (state == State.Alive)
+        {
+            RocketControllerMovement();
+            RockectControllerRotation();
+            PlayAudio(_audioClip);
+        }
     }
 
     #region RocketShip Movement
@@ -72,26 +86,45 @@ public class RocketShipController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if(state != State.Alive)
+        {
+            return;
+        }
 
+            switch (collision.gameObject.tag)
+            {
+                case "LaunchingPad":
+                state = State.Alive;
+#if DEBUG_RocketShipController
+                    Debug.Log("Ship is on LaunchingPad");
+#endif
+                    break;
+                case "LandingPad":
+                state = State.Transcending;
+#if DEBUG_RocketShipController
+                Debug.Log("Ship is on LandingPad");
+#endif
+                LandingPadReached(level);
+                    break;
+
+                case "Obstacle":
+                state = State.Dying;
+#if DEBUG_RocketShipController
+                Debug.Log("Death");
+#endif
+                    TakeHit();
+                    break;
+            }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
         switch (collision.gameObject.tag)
         {
             case "LaunchingPad":
 #if DEBUG_RocketShipController
-                Debug.Log("Ship is on LaunchingPad");
+                Debug.Log("Ship is airborne");
 #endif
-                break;
-            case "LandingPad":
-#if DEBUG_RocketShipController
-                Debug.Log("Ship is on LandingPad");
-#endif
-                break;
-
-            case "Obstacle":
-#if DEBUG_RocketShipController
-                Debug.Log("Death");
-#endif
-                TakeHit();
-
                 break;
         }
     }
@@ -106,15 +139,11 @@ public class RocketShipController : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void LandingPadReached(int level)
     {
-        switch (collision.gameObject.tag)
+        if (OnLandingPad != null)
         {
-            case "LaunchingPad":
-#if DEBUG_RocketShipController
-                Debug.Log("Ship is airborne");
-#endif
-                break;
+            OnLandingPad(level);
         }
     }
 
