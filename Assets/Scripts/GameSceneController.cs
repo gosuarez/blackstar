@@ -6,6 +6,29 @@ using UnityEngine.SceneManagement;
 
 public class GameSceneController : MonoBehaviour
 {
+
+    #region Singleton Declaration
+
+
+    private static GameSceneController _instance;
+
+    public static GameSceneController Instance
+    {
+        get 
+        
+        {
+            if (_instance == null)
+            {
+                GameObject gO = new GameObject("GameSceneController");
+                gO.AddComponent<GameSceneController>();
+            }
+            return _instance;        
+        }  
+    }
+
+    #endregion
+
+
     #region Field Declarations
 
     [Header("Set in Inspector")]
@@ -22,7 +45,7 @@ public class GameSceneController : MonoBehaviour
     [SerializeField] 
     private int _lives = 3;
 
-    private WaitForSeconds shipSpawnDelay = new WaitForSeconds(2f);
+    private WaitForSeconds shipSpawnDelay = new WaitForSeconds(3f);
     private Vector3 rocketShipOrigingPoint;
     private float shipOriginOffsetYPosition = 2f;
 
@@ -35,6 +58,7 @@ public class GameSceneController : MonoBehaviour
 
     private void Awake()
     {
+        _instance = this;
         LoadLevel();
     }
 

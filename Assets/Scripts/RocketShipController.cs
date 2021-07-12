@@ -11,18 +11,18 @@ public class RocketShipController : MonoBehaviour
 {
     #region Variables Declaration
     [Header("Set in Inspector")]
-    [Range(5,15)]
-    [SerializeField] 
+    [Range(5, 15)]
+    [SerializeField]
     private float _movementSpeed;
 
     [Range(200, 300)]
-    [SerializeField] 
+    [SerializeField]
     private float _rotationSpeed;
 
     [SerializeField] 
-    private AudioClip _audioClip;
+    private AudioClip[] audioClips;
 
-    private AudioSource _audioSource;
+    //private AudioSource _audioSource;
     private Rigidbody _rigidbody;
     private float _horizontalInput;
     private float _verticalInput;
@@ -30,6 +30,9 @@ public class RocketShipController : MonoBehaviour
     public event Action HitByObtacle;
     public event Action<int> OnLandingPad;
     private int level = 0;
+
+    private AudioSource _audioSource;
+    private AudioController _audioController;
 
     [SerializeField] 
     private enum State { Alive, Dying, Transcending }
@@ -42,6 +45,8 @@ public class RocketShipController : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _audioSource = GetComponent<AudioSource>();
+        _audioController = GameSceneController.Instance.GetComponent<AudioController>();
+        _audioSource = _audioController.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -51,7 +56,7 @@ public class RocketShipController : MonoBehaviour
         {
             RocketControllerMovement();
             RockectControllerRotation();
-            PlayAudio(_audioClip);
+            PlayAudioThruster(_audioController._audioClips, 0);
         }
     }
 
@@ -100,6 +105,8 @@ public class RocketShipController : MonoBehaviour
 #endif
                     break;
                 case "LandingPad":
+                //_audioSource.PlayOneShot(audioClips[1]);
+                _audioSource.PlayOneShot(_audioController._audioClips[1]);
                 state = State.Transcending;
 #if DEBUG_RocketShipController
                 Debug.Log("Ship is on LandingPad");
@@ -108,6 +115,8 @@ public class RocketShipController : MonoBehaviour
                     break;
 
                 case "Obstacle":
+                _audioSource.Stop();
+                _audioSource.PlayOneShot(_audioController._audioClips[2]);
                 state = State.Dying;
 #if DEBUG_RocketShipController
                 Debug.Log("Death");
@@ -139,6 +148,11 @@ public class RocketShipController : MonoBehaviour
         Destroy(gameObject);
     }
 
+    private void OnDisable()
+    {
+
+    }
+
     private void LandingPadReached(int level)
     {
         if (OnLandingPad != null)
@@ -151,12 +165,11 @@ public class RocketShipController : MonoBehaviour
 
     #region Audio
 
-    private void PlayAudio(AudioClip index)
+    private void PlayAudioThruster(AudioClip[] _audioClip, int index)
     {
         if (_verticalInput > 0 && !_audioSource.isPlaying)
         {
-            _audioSource.clip = index;
-            _audioSource.Play();
+            _audioSource.PlayOneShot(_audioController._audioClips[index]);
         }
 
         else if (_verticalInput <= 0 && _audioSource.isPlaying)

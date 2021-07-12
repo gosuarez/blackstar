@@ -304,9 +304,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c69676d2297b59746bd9d769a5664baf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _movementSpeed: 10
-  _rotationSpeed: 250
-  _audioClip: {fileID: 8300000, guid: 39a113b7865c5db4caf3622042e68c3c, type: 3}
+  _movementSpeed: 15
+  _rotationSpeed: 300
+  audioClips:
+  - {fileID: 8300000, guid: 0c3aab44d3f1c62409c09299c69b3371, type: 3}
+  - {fileID: 8300000, guid: 5c2b1352ddeb0c241a40c9c8b61aa9af, type: 3}
+  - {fileID: 8300000, guid: 7e8e92a3f7368da40af807c7082a0885, type: 3}
 --- !u!82 &8420595438489243963
 AudioSource:
   m_ObjectHideFlags: 0

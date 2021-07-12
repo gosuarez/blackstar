@@ -16,7 +16,8 @@ MonoBehaviour:
   title: Boost Particle
   sections:
   - heading: TODO
-    text: Check what colliders are colliding with obstacles
+    text: Create a SceneGameManager singleton. Replicate what we did for the bricks
+      game
     linkText: 
     url: 
   loadedLayout: 1
