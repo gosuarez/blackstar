@@ -6,7 +6,7 @@ public class HUDControllerGameLevels : MonoBehaviour //IEndGameObserver interfac
 {
     #region Field Declaration
 
-    [Header("Set in Inspector")] [Space]
+    [Header("Set in Inspector")]
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private StatusText statusText;
     [SerializeField] private GameObject restartButton;
@@ -31,12 +31,14 @@ public class HUDControllerGameLevels : MonoBehaviour //IEndGameObserver interfac
     // Start is called before the first frame update
     void Start()
     {
+        ShowShip(DataManager.Instance.shipLives);
         EventBroker.ShipFullTank += ShipFullTank;
         EventBroker.CoinSelected += UpdateScore;
         EventBroker.FuelSelected += UpdateFuelBar;
         EventBroker.LifeLost += HideShip;
         EventBroker.GameOver += EventBrokerOnGameOver;
         EventBroker.ActivateRestartButton += EventBrokerOnActivateRestartButton;
+        LoadCurrentScore();
 
         if (DataManager.Instance != null)
         {
@@ -52,7 +54,10 @@ public class HUDControllerGameLevels : MonoBehaviour //IEndGameObserver interfac
 
     public void ReStartGame()
     {
-        DataManager.Instance.ReStartGame();
+        //When restart button pressed, set all lives to 3 (initial number), set all point to zero, and load Scene level01
+        // DataManager.Instance.shipLives = 3;
+        // DataManager.Instance.currentScore = 0;
+        DataManager.Instance.ReStartGame(1);
     }
 
     private void EventBrokerOnActivateRestartButton()
@@ -70,14 +75,22 @@ public class HUDControllerGameLevels : MonoBehaviour //IEndGameObserver interfac
         fuelBar.SetMaxFuel(maxFuel);
     }
     
-    public void UpdateScore(int pointValue, bool powerUp)
+    private void UpdateScore(int pointValue, bool powerUp)
     {
         if (powerUp)
         {
             _totalPoints += pointValue;
+            DataManager.Instance.currentScore = _totalPoints;
             scoreText.text = _totalPoints.ToString("D5");
         }
     }
+
+    private void LoadCurrentScore()
+    {
+        _totalPoints = DataManager.Instance.currentScore;
+        scoreText.text = _totalPoints.ToString("D5");
+    }
+
 
     public void UpdateFuelBar(int fuelValue, bool powerUp)
     {
@@ -104,9 +117,18 @@ public class HUDControllerGameLevels : MonoBehaviour //IEndGameObserver interfac
         StartCoroutine(statusText.ChangeStatus(newStatus, gameOver));
     }
 
-    public void HideShip(int imageIndex)
+    private void HideShip(int imageIndex)
     {
         shipImages[imageIndex].gameObject.SetActive(false);
+    }
+
+    private void ShowShip(int liveIndex)
+    {
+
+        for (int i = 0; i < liveIndex; i++)
+        {
+            shipImages[i].gameObject.SetActive(true);
+        }
     }
 
     public void ResetShip()
@@ -131,12 +153,7 @@ public class HUDControllerGameLevels : MonoBehaviour //IEndGameObserver interfac
         EventBroker.ShipFullTank -= ShipFullTank;
         EventBroker.ActivateRestartButton -= EventBrokerOnActivateRestartButton;
     }
-
-    // public void ReStartGame()
-    // {
-    //     //GameSceneController.Instance.ReStartGame(_indexFirstScene);
-    // }
-
+    
     #endregion
 
     // Observer pattern implementation replaced by event broker

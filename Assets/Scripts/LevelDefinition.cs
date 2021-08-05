@@ -5,9 +5,11 @@ public class LevelDefinition : ScriptableObject
 {
     public string levelName;
     public bool mainMenu;
+    public bool endGame;
     public bool hasPowerUps;
     public float powerUpMinimumWait;
     public float powerUpMaximumWait;
-    public float shipThrusterSpeed;
-    public float shipRotationSpeed;
+    [Range(0, 30)] public float shipThrusterSpeed;
+    [Range(0, 300)] public float shipRotationSpeed;
+    public float obstacleSpeed;
 }

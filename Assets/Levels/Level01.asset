@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: Level 01
   mainMenu: 0
+  shipLives: 3
   hasPowerUps: 1
-  powerUpMinimumWait: 0
-  powerUpMaximumWait: 0
-  shipThrusterSpeed: 0
-  shipRotationSpeed: 0
+  powerUpMinimumWait: 3
+  powerUpMaximumWait: 10
+  shipThrusterSpeed: 5
+  shipRotationSpeed: 260
+  obstacleSpeed: 1

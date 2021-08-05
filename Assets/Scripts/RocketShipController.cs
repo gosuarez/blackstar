@@ -7,14 +7,14 @@ public class RocketShipController : MonoBehaviour
 {
     #region Variables Declaration
 
-    [Header("Set in Inspector")] [Range(0, 15)] [SerializeField]
-    private float movementSpeed;
-
-    [Range(0, 300)] [SerializeField] private float rotationSpeed;
+    [Header("Set in Inspector")]
     [SerializeField] private GameObject explosionParticleSystem;
     [SerializeField] private GameObject successParticleSystem;
     [SerializeField] private GameObject shipInstantiatedParticleSystem;
     [SerializeField] private GameObject powerUpParticleSystem;
+    
+    private float _movementSpeed;
+    private float _rotationSpeed;
 
     public enum State
     {
@@ -22,7 +22,8 @@ public class RocketShipController : MonoBehaviour
         Dying,
         Transcending
     }
-
+    
+    [Header("Set Dynamically")]
     public State shipState;
 
     private Rigidbody _rigidbody;
@@ -33,7 +34,7 @@ public class RocketShipController : MonoBehaviour
     private int _currentLevel = 0;
     private AudioSource _mainAudioSource;
     private AudioSource _rocketShipAudioSource;
-    private AudioController _audioController;
+    private AudioSFXController _audioSfxController;
     private int _consumedFuel = 1;
 
     //These two action events are removed as they were replaced by an event broker
@@ -49,10 +50,12 @@ public class RocketShipController : MonoBehaviour
         
         _hudControllerGameLevels = FindObjectOfType<HUDControllerGameLevels>();
         _rigidbody = GetComponent<Rigidbody>();
-        _audioController = GameSceneController.Instance.GetComponent<AudioController>();
-        _mainAudioSource = _audioController.GetComponent<AudioSource>();
+        _audioSfxController = GameSceneController.Instance.GetComponent<AudioSFXController>();
+        _mainAudioSource = _audioSfxController.GetComponent<AudioSource>();
         _rocketShipAudioSource = GetComponent<AudioSource>();
         _thrusterParticleSystem = GetComponentInChildren<ParticleSystem>();
+        _movementSpeed = DataManager.Instance.currentLevel.shipThrusterSpeed;
+        _rotationSpeed = DataManager.Instance.currentLevel.shipRotationSpeed;
     }
     
     private void InstantiateShipParticleSystem()
@@ -79,14 +82,14 @@ public class RocketShipController : MonoBehaviour
         _verticalInput = Input.GetAxisRaw("Vertical");
 
         //moves rocketship according to input and coordinate system
-        if (_verticalInput > 0 && _hudControllerGameLevels.currentFuelBar > 0)
+        if (_verticalInput > 0 && _hudControllerGameLevels.currentFuelBar > 0 && !DataManager.Instance.pauseMenuActive)
         {
-            _rigidbody.AddRelativeForce(Vector3.up * (_verticalInput * movementSpeed), ForceMode.Force);
+            _rigidbody.AddRelativeForce(Vector3.up * (_verticalInput * _movementSpeed), ForceMode.Force);
             _hudControllerGameLevels.UpdateFuelBar(_consumedFuel, false);
 
             if (!_rocketShipAudioSource.isPlaying)
             {
-                _rocketShipAudioSource.PlayOneShot(AudioController.DictionaryAudioClips["Rocket_Thruster"]);
+                _rocketShipAudioSource.PlayOneShot(AudioSFXController.DictionaryAudioClips["Rocket_Thruster"]);
                 _thrusterParticleSystem.Play();
 
                 //This is another way to play an array of audio clips. Replaced by a dictionary implementation.
@@ -117,7 +120,7 @@ public class RocketShipController : MonoBehaviour
         _rigidbody.freezeRotation = true;
 
         //rotates rocketship according to input
-        transform.Rotate(Vector3.back, _horizontalInput * Time.deltaTime * rotationSpeed);
+        transform.Rotate(Vector3.back, _horizontalInput * Time.deltaTime * _rotationSpeed);
         _rigidbody.freezeRotation = false;
     }
 
@@ -144,7 +147,7 @@ public class RocketShipController : MonoBehaviour
 
             case "LandingPad":
                 _mainAudioSource.Stop();
-                AudioController.Main_Play_One_Shot_Audio("Landing_Pad_Reached");
+                AudioSFXController.Main_Play_One_Shot_Audio("Landing_Pad_Reached");
                 GameObject success = Instantiate(successParticleSystem, transform.position, Quaternion.identity);
                 success.GetComponent<ParticleSystem>().Play();
                 shipState = State.Transcending;
@@ -182,7 +185,7 @@ public class RocketShipController : MonoBehaviour
     private void TakeHit()
     {
         _mainAudioSource.Stop();
-        AudioController.Main_Play_One_Shot_Audio("Death_Explosion");
+        AudioSFXController.Main_Play_One_Shot_Audio("Death_Explosion");
         shipState = State.Dying;
 
         GameObject xp = Instantiate(explosionParticleSystem, transform.position, Quaternion.identity);

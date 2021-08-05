@@ -11,6 +11,7 @@ TagManager:
   - LaunchingPad
   - Obstacle
   - Rocket Ship
+  - PauseScapeMenu
   layers:
   - Default
   - TransparentFX

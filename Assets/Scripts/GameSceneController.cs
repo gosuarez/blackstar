@@ -36,18 +36,16 @@ public class GameSceneController : MonoBehaviour
     [SerializeField] private Transform launchingPad;
     [Space]
     [SerializeField] private PowerUpController[] powerUpPrefabs;
-    [SerializeField] private float timeToRespawnPowerUp;
     [SerializeField] private Animator obstacleAnimator;
     
     [Header("Set Dynamically")]
-    [SerializeField] private int lives = 3;
-    [SerializeField] private int nextLevel;
+    public int _lives;
     private WaitForSeconds _shipSpawnDelay = new WaitForSeconds(3f);
-    private Vector3 _rocketShipOrigingPoint;
+    private Vector3 _rocketShipOriginPoint;
     private float _shipOriginOffsetYPosition = 2f;
-    private enum GameLevels {Level0, Level1, Level2}
-    private GameLevels _currentLevel;
     private static readonly int Obstacle = Animator.StringToHash("MoveObstacle");
+    
+    public LevelDefinition currentLevel;
 
     #endregion
 
@@ -81,8 +79,6 @@ public class GameSceneController : MonoBehaviour
     private void Awake()
     {
         _instance = this;
-        MoveObstacle(true);
-        
         //Part of the same implementation explained above (Observer Pattern)
         //_endGameObservers = new List<IEndGameObserver>();
     }
@@ -90,9 +86,12 @@ public class GameSceneController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        currentLevel = DataManager.Instance.currentLevel;
+        _lives = DataManager.Instance.shipLives;
+        MoveObstacle(true);
         rocketShipRoot.position = launchingPad.position;
         Vector3 rocketShipPosition = rocketShipRoot.position;
-        _rocketShipOrigingPoint = new Vector3(rocketShipPosition.x, (rocketShipPosition.y + _shipOriginOffsetYPosition), rocketShipPosition.z);
+        _rocketShipOriginPoint = new Vector3(rocketShipPosition.x, (rocketShipPosition.y + _shipOriginOffsetYPosition), rocketShipPosition.z);
         
         EventBroker.LandingPadReached += RocketShipPrefab_OnLandingPad;
         EventBroker.ShipHitByObstacle += Ship_HitByObstacle;
@@ -101,7 +100,7 @@ public class GameSceneController : MonoBehaviour
 
         if (DataManager.Instance != null)
         {
-            if (DataManager.Instance.currentLevel.hasPowerUps)
+            if (currentLevel.hasPowerUps)
             {
                 StartCoroutine(SpawnPowerUP());
             }
@@ -125,8 +124,8 @@ public class GameSceneController : MonoBehaviour
             yield return _shipSpawnDelay;
         }
 
-        RocketShipController ship = Instantiate(rocketShipPrefab, _rocketShipOrigingPoint, Quaternion.identity);
-        AudioController.Main_Play_One_Shot_Audio("Ship_Instantiated");
+        RocketShipController ship = Instantiate(rocketShipPrefab, _rocketShipOriginPoint, Quaternion.identity);
+        AudioSFXController.Main_Play_One_Shot_Audio("Ship_Instantiated");
         EventBroker.CallShipFullTank();
         ship.transform.SetParent(rocketShipRoot.transform);
         
@@ -139,8 +138,9 @@ public class GameSceneController : MonoBehaviour
 
     private void Ship_HitByObstacle()
     {
-        lives--;
-        
+        _lives--;
+        DataManager.Instance.shipLives = _lives;
+
 #if GAMESCENECONTROLLER_DEBUG
         print("Ship hit by obstacle");
 #endif
@@ -148,9 +148,9 @@ public class GameSceneController : MonoBehaviour
         //Action event implementation replaced by event broker
         //LifeLost?.Invoke(lives);
         
-        EventBroker.CallLifeLost(lives);
+        EventBroker.CallLifeLost(_lives);
         
-        if (lives > 0)
+        if (_lives > 0)
         {
             StartCoroutine(SpawnRocketShip(true));
         }
@@ -173,6 +173,7 @@ public class GameSceneController : MonoBehaviour
     {
         //Todo: this action will have to be improved as more animations need to be triggered.
         obstacleAnimator.SetBool(Obstacle, moveObstacle);
+        obstacleAnimator.speed = currentLevel.obstacleSpeed;
     }
 
     private IEnumerator SpawnPowerUP()
@@ -180,9 +181,9 @@ public class GameSceneController : MonoBehaviour
         while (true)
         {
             int index = UnityEngine.Random.Range(0, powerUpPrefabs.Length);
-            Vector2 spawnPosition = ScreenBounds.RandomTopPosition();
+            Vector2 spawnPosition = GameScreenBounds.RandomTopPosition();
             PowerUpController powerUp = Instantiate(powerUpPrefabs[index], spawnPosition, Quaternion.identity);
-            yield return new WaitForSeconds(timeToRespawnPowerUp);
+            yield return new WaitForSeconds(Random.Range(currentLevel.powerUpMinimumWait, currentLevel.powerUpMaximumWait));
         }
     }
     

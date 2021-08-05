@@ -62,7 +62,7 @@ public class PowerUpController : MonoBehaviour //Interface remove and replace by
         {
             transform.Translate(Vector2.down * (Time.deltaTime * 3), Space.World);
 
-            if (ScreenBounds.OutOfBounds(transform.position))
+            if (GameScreenBounds.OutOfBounds(transform.position))
             {
                 //Observer pattern implementation replaced by publisher pattern
                 //RemoveAndDestroy();
@@ -87,7 +87,7 @@ public class PowerUpController : MonoBehaviour //Interface remove and replace by
         if (powerType == PowerType.Coin)
         {
             EventBroker.CallCoinSelected(coinPoint, true);
-            AudioController.Main_Play_One_Shot_Audio("Coin_Selected");
+            AudioSFXController.Main_Play_One_Shot_Audio("Coin_Selected");
             
             //Observer pattern implementation replaced by publisher pattern
             //RemoveAndDestroy();
@@ -97,7 +97,7 @@ public class PowerUpController : MonoBehaviour //Interface remove and replace by
         if (powerType == PowerType.Fuel)
         {
             EventBroker.CallFuelSelected(fuelPoint, true);
-            AudioController.Main_Play_One_Shot_Audio("Fuel_Selected");
+            AudioSFXController.Main_Play_One_Shot_Audio("Fuel_Selected");
             
             //Observer pattern implementation replaced by publisher pattern
             //RemoveAndDestroy();

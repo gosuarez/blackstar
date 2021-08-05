@@ -8,10 +8,13 @@ public class DataManager : MonoBehaviour
     public static DataManager Instance;
     public string currentPlayer;
     public string bestPlayer;
+    public int currentScore;
     public int bestScore;
+    public int shipLives = 3;
     public List<LevelDefinition> levels;
     public int currentLevelIndex = 0;
     public LevelDefinition currentLevel;
+    public bool pauseMenuActive;
 
     private void Awake()
     {
@@ -23,14 +26,10 @@ public class DataManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-    }
-
-    void Start()
-    {
         AssignLevelIndex(currentLevelIndex);
     }
     
-    private void AssignLevelIndex(int levelIndex)
+    public void AssignLevelIndex(int levelIndex)
     {
         currentLevel = levels[levelIndex];
     }
@@ -42,8 +41,12 @@ public class DataManager : MonoBehaviour
         StartCoroutine(LoadScene(currentLevelIndex));
     }
     
-    public void ReStartGame()
+    public void ReStartGame(int levelIndex)
     {
+        AssignLevelIndex(levelIndex);
+        currentLevelIndex = levelIndex;
+        shipLives = 3;
+        currentScore = 0;
         StartCoroutine(LoadScene(currentLevelIndex));
     }
     
