@@ -42,7 +42,7 @@ public class GameSceneController : MonoBehaviour
     public int _lives;
     private WaitForSeconds _shipSpawnDelay = new WaitForSeconds(3f);
     private Vector3 _rocketShipOriginPoint;
-    private float _shipOriginOffsetYPosition = 2f;
+    private float _shipOriginOffsetYPosition = 3f;
     private static readonly int Obstacle = Animator.StringToHash("MoveObstacle");
     
     public LevelDefinition currentLevel;

@@ -25,9 +25,17 @@ public class RocketShipController : MonoBehaviour
         Dying,
         Transcending
     }
-    
+
+    public enum Action
+    {
+        Flying,
+        LaunchingPad,
+        LandignPad,
+    }
+
     [Header("Set Dynamically")]
     public State shipState;
+    public Action shipAction;
 
     private Rigidbody _rigidbody;
     private float _horizontalInput;
@@ -97,7 +105,10 @@ public class RocketShipController : MonoBehaviour
         if (shipState == State.Alive)
         {
             RocketControllerMovement();
-            RockectControllerRotation();
+            if (shipAction == Action.Flying)
+            {
+                RockectControllerRotation();
+            }
         }
     }
 
@@ -182,17 +193,7 @@ public class RocketShipController : MonoBehaviour
     #endregion
 
     #region RocketShip Rotation
-
-    // private void RockectControllerRotation()
-    // {
-    //     _horizontalInput = Input.GetAxis("Horizontal");
-    //     _rigidbody.freezeRotation = true;
-    //
-    //     //rotates rocketship according to input
-    //     transform.Rotate(Vector3.back, _horizontalInput * Time.deltaTime * _rotationSpeed);
-    //     _rigidbody.freezeRotation = false;
-    // }
-
+    
     #endregion
 
     #region Collision Detection
@@ -208,14 +209,18 @@ public class RocketShipController : MonoBehaviour
         {
             case "LaunchingPad":
                 shipState = State.Alive;
-
+                shipAction = Action.LandignPad;
 #if ROCKETSHIPCONTROLLER_DEBUG
                 Debug.Log("Ship is on LaunchingPad");
 #endif
                 break;
 
             case "LandingPad":
-                _mainAudioSource.Stop();
+                shipAction = Action.LaunchingPad;
+                _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+                //_mainAudioSource.Stop();
+                _rocketShipAudioSource.Stop();
+                _thrusterParticleSystem.Stop();
                 AudioSFXController.Main_Play_One_Shot_Audio("Landing_Pad_Reached");
                 GameObject success = Instantiate(successParticleSystem, transform.position, Quaternion.identity);
                 success.GetComponent<ParticleSystem>().Play();
@@ -242,6 +247,7 @@ public class RocketShipController : MonoBehaviour
         switch (collision.gameObject.tag)
         {
             case "LaunchingPad":
+                shipAction = Action.Flying;
 #if ROCKETSHIPCONTROLLER_DEBUG
                 Debug.Log("Ship is airborne");
 #endif
