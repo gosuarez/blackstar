@@ -1,24 +1,71 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class HUDControllerGameMainMenu : MonoBehaviour
 {
     public string currentPlayer;
+    private Gamepad _gamepad;
     public Text bestScoreText;
+    public GameObject uIKeyboard;
+    private InputField _inputField;
+    public Button startButton;
+    private string _name;
 
     private void Start()
     {
         UpdateScore();
+        _inputField = GetComponentInChildren<InputField>();
+    }
+    
+    public void GetGamePad()
+    {
+        if (InputSystem.GetDevice<Gamepad>() != null)
+        {
+            _gamepad = InputSystem.GetDevice<Gamepad>();
+        }
     }
 
-    public void CurrentPlayerName(string text)
+    public void ActivateKeyboard()
     {
-        currentPlayer = text;
-        DataManager.Instance.currentPlayer = text;
+        if (_gamepad != null &&  _gamepad.aButton.wasPressedThisFrame)
+        {
+            _inputField.DeactivateInputField();
+            uIKeyboard.SetActive(true);
+        }
+    }
+
+    public void CancelKeyboard()
+    {
+        uIKeyboard.SetActive(false);
+        startButton.Select();
+    }
+
+    public void AddAlphabetToInputField(string alphabet)
+    {
+        _name += alphabet;
+        _inputField.text = _name;
+    }
+    
+    public void RemoveAlphabetToInputField()
+    {
+        if (_name.Length != 0)
+        {
+            _name = _name.Substring(0, _name.Length - 1);
+            _inputField.text = _name;
+        }
+    }
+    
+    public void CurrentPlayerName()
+    {
+        DataManager.Instance.currentPlayer = _inputField.text;
     }
     
     public void UpdateScore()

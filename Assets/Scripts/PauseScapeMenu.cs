@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Runtime.InteropServices;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -7,18 +9,37 @@ using UnityEditor;
 public class PauseScapeMenu : MonoBehaviour
 {
     private bool _showMenu;
+    private PlayerController _playerController;
+    
     public GameObject pauseScapeMenu;
-    
-    
-    // Update is called once per frame
-    void Update()
+
+    private void Awake()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            ShowPauseMenu();
-            print("showing menu");
-        }
+        _playerController = new PlayerController();
+        _playerController.Gameplay.PauseMenu.canceled += context => ShowPauseMenu();
     }
+    
+    
+    private void OnEnable()
+    {
+        _playerController.Gameplay.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _playerController.Gameplay.Disable();
+    }
+
+
+    // Update is called once per frame
+    // void Update()
+    // {
+    //     if (Input.GetKeyDown(KeyCode.Escape))
+    //     {
+    //         ShowPauseMenu();
+    //         print("showing menu");
+    //     }
+    // }
 
     private void ShowPauseMenu()
     {

@@ -18,6 +18,6 @@ MonoBehaviour:
   hasPowerUps: 1
   powerUpMinimumWait: 5
   powerUpMaximumWait: 12
-  shipThrusterSpeed: 5
+  shipThrusterSpeed: 10
   shipRotationSpeed: 260
   obstacleSpeed: 3

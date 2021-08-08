@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
@@ -10,21 +11,20 @@ public class FinalMenu : MonoBehaviour
     public Canvas finalMenu;
     public bool showMenu;
     
+    private PlayerController _playerController;
+
+    private void Awake()
+    {
+        _playerController = new PlayerController();
+        _playerController.Gameplay.PauseMenu.canceled += context => ShowFinalMenu();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         finalMenu = gameObject.GetComponent<Canvas>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            ShowFinalMenu();
-        }
-    }
-
+    
     private void ShowFinalMenu()
     {
   
