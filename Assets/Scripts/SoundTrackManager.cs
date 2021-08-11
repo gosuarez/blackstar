@@ -15,8 +15,9 @@ public class SoundTrackManager : MonoBehaviour
 
     private void Awake()
     {
-        AssignAndGetComponent();
-        DictionaryAddKey();
+            AssignAndGetComponent();
+            DictionaryRemoveKey();
+            DictionaryAddKey();
     }
     
     public void PlaySoundTrackOnStart()
@@ -24,24 +25,24 @@ public class SoundTrackManager : MonoBehaviour
         switch (DataManager.Instance.currentLevelIndex)
         {
             case 0:
-                PlaySoundTrack_One_Shot("SoundTrack_0");
-                //PlaySoundTrack("SoundTrack_0");
+                //PlaySoundTrack_One_Shot("SoundTrack_0");
+                PlaySoundTrack("SoundTrack_0");
                 break;
             case 1:
-                //PlaySoundTrack("SoundTrack_1");
-                PlaySoundTrack_One_Shot("SoundTrack_1");
+                PlaySoundTrack("SoundTrack_1");
+                //PlaySoundTrack_One_Shot("SoundTrack_1");
                 break;
             case 2:
-                //PlaySoundTrack("SoundTrack_1");
-                PlaySoundTrack_One_Shot("SoundTrack_2");
+                PlaySoundTrack("SoundTrack_1");
+                //PlaySoundTrack_One_Shot("SoundTrack_2");
                 break;
             case 3:
-                //PlaySoundTrack("SoundTrack_1");
-                PlaySoundTrack_One_Shot("SoundTrack_3");
+                PlaySoundTrack("SoundTrack_1");
+                //PlaySoundTrack_One_Shot("SoundTrack_3");
                 break;
             case 4:
-                //PlaySoundTrack("SoundTrack_1");
-                PlaySoundTrack_One_Shot("SoundTrack_4");
+                PlaySoundTrack("SoundTrack_1");
+                //PlaySoundTrack_One_Shot("SoundTrack_4");
                 break;
         }
     }

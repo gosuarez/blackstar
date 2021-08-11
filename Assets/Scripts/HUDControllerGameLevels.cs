@@ -9,7 +9,8 @@ public class HUDControllerGameLevels : MonoBehaviour //IEndGameObserver interfac
     [Header("Set in Inspector")]
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private StatusText statusText;
-    [SerializeField] private GameObject restartButton;
+    [SerializeField] private GameObject gameOverOptions;
+    [SerializeField] private Button restartButton;
     [SerializeField] private Image[] shipImages;
     [SerializeField] private FuelBar fuelBar;
 
@@ -62,7 +63,8 @@ public class HUDControllerGameLevels : MonoBehaviour //IEndGameObserver interfac
 
     private void EventBrokerOnActivateRestartButton()
     {
-        restartButton.SetActive(true);
+        gameOverOptions.SetActive(true);
+        restartButton.Select();
     }
 
     #endregion

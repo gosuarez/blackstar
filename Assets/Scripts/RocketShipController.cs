@@ -38,8 +38,6 @@ public class RocketShipController : MonoBehaviour
     public Action shipAction;
 
     private Rigidbody _rigidbody;
-    private float _horizontalInput;
-    private float _verticalInput;
     private ParticleSystem _thrusterParticleSystem;
     private HUDControllerGameLevels _hudControllerGameLevels;
     private int _currentLevel = 0;
@@ -59,7 +57,8 @@ public class RocketShipController : MonoBehaviour
     private void Awake()
     {
         _playerController = new PlayerController();
-        //_playerController.Gameplay.Thruster += context => ActivateThruster();
+        _hudControllerGameLevels = FindObjectOfType<HUDControllerGameLevels>();
+ 
         _playerController.Gameplay.Thruster.performed += context => _verticalMovement = context.ReadValue<float>();
         _playerController.Gameplay.Thruster.canceled += context => _verticalMovement = 0;
         
@@ -81,8 +80,6 @@ public class RocketShipController : MonoBehaviour
     void Start()
     {
         InstantiateShipParticleSystem();
-        
-        _hudControllerGameLevels = FindObjectOfType<HUDControllerGameLevels>();
         _rigidbody = GetComponent<Rigidbody>();
         _audioSfxController = GameSceneController.Instance.GetComponent<AudioSFXController>();
         _mainAudioSource = _audioSfxController.GetComponent<AudioSource>();
@@ -104,6 +101,7 @@ public class RocketShipController : MonoBehaviour
     {
         if (shipState == State.Alive)
         {
+            
             RocketControllerMovement();
             if (shipAction == Action.Flying)
             {
@@ -210,6 +208,10 @@ public class RocketShipController : MonoBehaviour
             case "LaunchingPad":
                 shipState = State.Alive;
                 shipAction = Action.LandignPad;
+                if (_hudControllerGameLevels.currentFuelBar == 0)
+                {
+                    TakeHit();
+                }
 #if ROCKETSHIPCONTROLLER_DEBUG
                 Debug.Log("Ship is on LaunchingPad");
 #endif

@@ -47,13 +47,22 @@ public class FinalMenu : MonoBehaviour
     public void TryAgain(int index)
     {
         CheckBestScoreBeforeExit();
-        DataManager.Instance.ReStartGame(1);
+        DataManager.Instance.ReStartGame(index);
         //DataManager.Instance.currentScore = 0;
         //DataManager.Instance.AssignLevelIndex(1);
         //SceneManager.LoadScene(index);
     }
-
-
+    
+    public void MainMenu(int index)
+    {
+        CheckBestScoreBeforeExit();
+        DataManager.Instance.ReStartGame(index);
+        //DataManager.Instance.currentScore = 0;
+        //DataManager.Instance.AssignLevelIndex(1);
+        //SceneManager.LoadScene(index);
+    }
+    
+    
     public void CheckBestScoreBeforeExit()
     {
         //Checks if the current score is higher than bestscore. If higher, save data.

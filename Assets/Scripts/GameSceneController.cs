@@ -31,14 +31,15 @@ public class GameSceneController : MonoBehaviour
     #region Field Declarations
 
     [Header("Set in Inspector")]
-    [SerializeField] private RocketShipController rocketShipPrefab;
+    public RocketShipController rocketShipPrefab;
     [SerializeField] private Transform rocketShipRoot;
     [SerializeField] private Transform launchingPad;
     [Space]
     [SerializeField] private PowerUpController[] powerUpPrefabs;
     [SerializeField] private Animator obstacleAnimator;
-    
-    [Header("Set Dynamically")]
+
+    [Header("Set Dynamically")] 
+    public RocketShipController ship;
     public int _lives;
     private WaitForSeconds _shipSpawnDelay = new WaitForSeconds(3f);
     private Vector3 _rocketShipOriginPoint;
@@ -124,7 +125,9 @@ public class GameSceneController : MonoBehaviour
             yield return _shipSpawnDelay;
         }
 
-        RocketShipController ship = Instantiate(rocketShipPrefab, _rocketShipOriginPoint, Quaternion.identity);
+        ship = Instantiate(rocketShipPrefab, _rocketShipOriginPoint, Quaternion.identity);
+        ship.gameObject.GetComponent<Rigidbody>().useGravity = true;
+        ship.gameObject.GetComponent<Rigidbody>().isKinematic = false;
         AudioSFXController.Main_Play_One_Shot_Audio("Ship_Instantiated");
         EventBroker.CallShipFullTank();
         ship.transform.SetParent(rocketShipRoot.transform);

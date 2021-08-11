@@ -38,7 +38,7 @@ public class DataManager : MonoBehaviour
     {
         currentLevelIndex++;
         AssignLevelIndex(currentLevelIndex);
-        StartCoroutine(LoadScene(currentLevelIndex));
+        StartCoroutine(LoadSceneAfterTime(currentLevelIndex));
     }
     
     public void ReStartGame(int levelIndex)
@@ -47,10 +47,19 @@ public class DataManager : MonoBehaviour
         currentLevelIndex = levelIndex;
         shipLives = 3;
         currentScore = 0;
-        StartCoroutine(LoadScene(currentLevelIndex));
+        StartCoroutine(LoadSceneAfterTime(currentLevelIndex));
     }
-    
-    private IEnumerator LoadScene(int index)
+
+    public void LoadMainMenu(int levelIndex)
+    {
+        AssignLevelIndex(levelIndex);
+        currentLevelIndex = levelIndex;
+        shipLives = 3;
+        currentScore = 0;
+        SceneManager.LoadScene(levelIndex); 
+    }
+
+    private IEnumerator LoadSceneAfterTime(int index)
     {
         yield return new WaitForSeconds(1f);
         SceneManager.LoadScene(index);

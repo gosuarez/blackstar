@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 #if UNITY_EDITOR
@@ -7,6 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class HUDControllerGameMainMenu : MonoBehaviour
@@ -125,6 +127,31 @@ public class HUDControllerGameMainMenu : MonoBehaviour
     //     }
     //     return;
     // }
+    
+    public void LoadNewScene()
+    {
+        DataManager.Instance.currentLevelIndex++;
+        DataManager.Instance.AssignLevelIndex(DataManager.Instance.currentLevelIndex);
+        StartCoroutine(LoadScene(DataManager.Instance.currentLevelIndex));
+    }
+    
+    public void ReStartGame(int levelIndex)
+    {
+        DataManager.Instance.AssignLevelIndex(levelIndex);
+        DataManager.Instance.currentLevelIndex = levelIndex;
+        DataManager.Instance.shipLives = 3;
+        DataManager.Instance.currentScore = 0;
+        StartCoroutine(LoadScene(DataManager.Instance.currentLevelIndex));
+    }
+    
+    private IEnumerator LoadScene(int index)
+    {
+        yield return new WaitForSeconds(1f);
+        SceneManager.LoadScene(index);
+    }
+    
+    
+    
 
     public void Exit()
     {

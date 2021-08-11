@@ -2,6 +2,9 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -10,8 +13,9 @@ public class PauseScapeMenu : MonoBehaviour
 {
     private bool _showMenu;
     private PlayerController _playerController;
-    
-    public GameObject pauseScapeMenu;
+
+    [SerializeField] private GameObject pauseScapeMenu;
+    [SerializeField] private Button continueButton;
 
     private void Awake()
     {
@@ -46,6 +50,7 @@ public class PauseScapeMenu : MonoBehaviour
         if (!_showMenu)
         {
             pauseScapeMenu.SetActive(true);
+            continueButton.Select();
             Time.timeScale = 0f;
             _showMenu = true;
             DataManager.Instance.pauseMenuActive = _showMenu;
@@ -64,7 +69,22 @@ public class PauseScapeMenu : MonoBehaviour
         _showMenu = false;   
         DataManager.Instance.pauseMenuActive = _showMenu;
     }
-    
+
+    public void MainMenu()
+    {
+        pauseScapeMenu.SetActive(false);
+        Time.timeScale = 1;
+        if (GameSceneController.Instance.ship != null)
+        {
+            GameSceneController.Instance.ship.GetComponent<Rigidbody>().useGravity = false;
+            GameSceneController.Instance.ship.GetComponent<Rigidbody>().isKinematic = true;
+        }
+        _showMenu = false;
+        DataManager.Instance.pauseMenuActive = _showMenu;
+        DataManager.Instance.ReStartGame(0);
+    }
+
+
     public void Exit()
     {
 
