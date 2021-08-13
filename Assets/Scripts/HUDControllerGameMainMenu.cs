@@ -6,7 +6,6 @@ using System.IO;
 using UnityEditor;
 #endif
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -81,12 +80,11 @@ public class HUDControllerGameMainMenu : MonoBehaviour
 
             DataManager.Instance.bestPlayer = data.bestPlayer;
             DataManager.Instance.bestScore = data.bestScore;
+            bestScoreText.text = $"Best Score: {DataManager.Instance.bestPlayer}: {DataManager.Instance.bestScore}";
         }
-
-        // Updates score if loaded or reseted it
-        if (DataManager.Instance != null)
+        else
         {
-            bestScoreText.text = $"Best Score: {DataManager.Instance.bestPlayer} : {DataManager.Instance.bestScore}";
+            bestScoreText.text = "Best Score: name: 0";
         }
     }
 
@@ -102,31 +100,6 @@ public class HUDControllerGameMainMenu : MonoBehaviour
         File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
         UpdateScore();
     }
-    
-    // public static void SaveData()
-    // {
-    //     SaveData data = new SaveData();
-    //     
-    //     data.bestScore = DataManager.Instance.bestScore;
-    //     data.bestPlayer = DataManager.Instance.bestPlayer;
-    //
-    //     string json = JsonUtility.ToJson(data);
-    //     
-    //     File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
-    // }
-    
-    // public void CheckBestScoreBeforeExit()
-    // {
-    //     //Checks if the current score is higher than bestscore. If higher, save data.
-    //     if (DataManager.Instance.currentScore > DataManager.Instance.bestScore)
-    //     {
-    //         DataManager.Instance.bestScore = DataManager.Instance.currentScore;
-    //         DataManager.Instance.bestPlayer = currentPlayer;
-    //         //bestScoreText.text = $"Best Score: {DataManager.Instance.bestPlayer}: { DataManager.Instance.bestScore}";
-    //         SaveData();
-    //     }
-    //     return;
-    // }
     
     public void LoadNewScene()
     {
@@ -151,8 +124,6 @@ public class HUDControllerGameMainMenu : MonoBehaviour
     }
     
     
-    
-
     public void Exit()
     {
 #if UNITY_EDITOR

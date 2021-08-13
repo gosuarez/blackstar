@@ -1,10 +1,8 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ChangeEmissionIntensity : MonoBehaviour
 {
-    
     [SerializeField] private float intensityValue;
     [SerializeField] private float minimumValue;
     [SerializeField] private float maximumValue = 3f;

@@ -1,14 +1,16 @@
 ﻿using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FinalMenuMessage : MonoBehaviour
 {
     [SerializeField] private TMP_Text statusText;
     [SerializeField] private FinalMenu finalMenu;
+    [SerializeField] private Button playAgain;
     private float _shortFadingTime = 1.5f;
     private float _longFadingTime = 2f;
-    
+
 
     private void Awake()
     {
@@ -30,6 +32,7 @@ public class FinalMenuMessage : MonoBehaviour
         statusText.CrossFadeAlpha(0, 1.5f, false);
         yield return new WaitForSeconds(_shortFadingTime);
         statusText.gameObject.SetActive(false);
+        
         yield return new WaitForSeconds(_shortFadingTime);
     
         statusText.gameObject.SetActive(true);
@@ -51,6 +54,7 @@ public class FinalMenuMessage : MonoBehaviour
             statusText.CrossFadeAlpha(0, 1.5f, false);
             yield return new WaitForSeconds(_shortFadingTime);
             statusText.gameObject.SetActive(false);
+            playAgain.Select();
         }
     
         else
@@ -62,6 +66,7 @@ public class FinalMenuMessage : MonoBehaviour
             statusText.CrossFadeAlpha(0, 1.5f, false);
             yield return new WaitForSeconds(_longFadingTime);
             statusText.gameObject.SetActive(false);
+            playAgain.Select();
         }
     
         yield return new WaitForSeconds(_shortFadingTime);

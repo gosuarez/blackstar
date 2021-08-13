@@ -56,8 +56,6 @@ public class HUDControllerGameLevels : MonoBehaviour //IEndGameObserver interfac
     public void ReStartGame()
     {
         //When restart button pressed, set all lives to 3 (initial number), set all point to zero, and load Scene level01
-        // DataManager.Instance.shipLives = 3;
-        // DataManager.Instance.currentScore = 0;
         DataManager.Instance.ReStartGame(1);
     }
 

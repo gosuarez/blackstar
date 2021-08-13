@@ -1,9 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Runtime.InteropServices;
-using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 using UnityEngine.UI;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -33,18 +28,7 @@ public class PauseScapeMenu : MonoBehaviour
     {
         _playerController.Gameplay.Disable();
     }
-
-
-    // Update is called once per frame
-    // void Update()
-    // {
-    //     if (Input.GetKeyDown(KeyCode.Escape))
-    //     {
-    //         ShowPauseMenu();
-    //         print("showing menu");
-    //     }
-    // }
-
+    
     private void ShowPauseMenu()
     {
         if (!_showMenu)

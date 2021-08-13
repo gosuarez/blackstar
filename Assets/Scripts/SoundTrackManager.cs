@@ -33,15 +33,15 @@ public class SoundTrackManager : MonoBehaviour
                 //PlaySoundTrack_One_Shot("SoundTrack_1");
                 break;
             case 2:
-                PlaySoundTrack("SoundTrack_1");
+                PlaySoundTrack("SoundTrack_2");
                 //PlaySoundTrack_One_Shot("SoundTrack_2");
                 break;
             case 3:
-                PlaySoundTrack("SoundTrack_1");
+                PlaySoundTrack("SoundTrack_3");
                 //PlaySoundTrack_One_Shot("SoundTrack_3");
                 break;
             case 4:
-                PlaySoundTrack("SoundTrack_1");
+                PlaySoundTrack("SoundTrack_4");
                 //PlaySoundTrack_One_Shot("SoundTrack_4");
                 break;
         }

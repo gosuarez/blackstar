@@ -1,6 +1,7 @@
-﻿#define GAMESCENECONTROLLER_DEBUG
+﻿//#define GAMESCENECONTROLLER_DEBUG
 
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class GameSceneController : MonoBehaviour
@@ -37,16 +38,16 @@ public class GameSceneController : MonoBehaviour
     [Space]
     [SerializeField] private PowerUpController[] powerUpPrefabs;
     [SerializeField] private Animator obstacleAnimator;
-
+    [SerializeField] private BackgroundColor backgroundColor;
+    
     [Header("Set Dynamically")] 
     public RocketShipController ship;
-    public int _lives;
+    private int _lives;
     private WaitForSeconds _shipSpawnDelay = new WaitForSeconds(3f);
     private Vector3 _rocketShipOriginPoint;
     private float _shipOriginOffsetYPosition = 3f;
     private static readonly int Obstacle = Animator.StringToHash("MoveObstacle");
-    
-    public LevelDefinition currentLevel;
+    private LevelDefinition _currentLevel;
 
     #endregion
 
@@ -87,7 +88,7 @@ public class GameSceneController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentLevel = DataManager.Instance.currentLevel;
+        _currentLevel = DataManager.Instance.currentLevel;
         _lives = DataManager.Instance.shipLives;
         MoveObstacle(true);
         rocketShipRoot.position = launchingPad.position;
@@ -101,7 +102,7 @@ public class GameSceneController : MonoBehaviour
 
         if (DataManager.Instance != null)
         {
-            if (currentLevel.hasPowerUps)
+            if (_currentLevel.hasPowerUps)
             {
                 StartCoroutine(SpawnPowerUP());
             }
@@ -124,7 +125,7 @@ public class GameSceneController : MonoBehaviour
         {
             yield return _shipSpawnDelay;
         }
-
+        
         ship = Instantiate(rocketShipPrefab, _rocketShipOriginPoint, Quaternion.identity);
         ship.gameObject.GetComponent<Rigidbody>().useGravity = true;
         ship.gameObject.GetComponent<Rigidbody>().isKinematic = false;
@@ -141,6 +142,7 @@ public class GameSceneController : MonoBehaviour
 
     private void Ship_HitByObstacle()
     {
+        backgroundColor.StartPulsing();
         _lives--;
         DataManager.Instance.shipLives = _lives;
 
@@ -176,17 +178,17 @@ public class GameSceneController : MonoBehaviour
     {
         //Todo: this action will have to be improved as more animations need to be triggered.
         obstacleAnimator.SetBool(Obstacle, moveObstacle);
-        obstacleAnimator.speed = currentLevel.obstacleSpeed;
+        obstacleAnimator.speed = _currentLevel.obstacleSpeed;
     }
 
     private IEnumerator SpawnPowerUP()
     {
         while (true)
         {
-            int index = UnityEngine.Random.Range(0, powerUpPrefabs.Length);
+            int index = Random.Range(0, powerUpPrefabs.Length);
             Vector2 spawnPosition = GameScreenBounds.RandomTopPosition();
             PowerUpController powerUp = Instantiate(powerUpPrefabs[index], spawnPosition, Quaternion.identity);
-            yield return new WaitForSeconds(Random.Range(currentLevel.powerUpMinimumWait, currentLevel.powerUpMaximumWait));
+            yield return new WaitForSeconds(Random.Range(_currentLevel.powerUpMinimumWait, _currentLevel.powerUpMaximumWait));
         }
     }
     

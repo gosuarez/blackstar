@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class DataManager : MonoBehaviour
@@ -12,10 +14,10 @@ public class DataManager : MonoBehaviour
     public int bestScore;
     public int shipLives = 3;
     public List<LevelDefinition> levels;
-    public int currentLevelIndex = 0;
+    public int currentLevelIndex;
     public LevelDefinition currentLevel;
     public bool pauseMenuActive;
-
+    
     private void Awake()
     {
         if (Instance != null)

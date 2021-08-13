@@ -15,10 +15,10 @@ MonoBehaviour:
   levelName: The End
   mainMenu: 0
   endGame: 1
-  shipLives: 0
   hasPowerUps: 0
   powerUpMinimumWait: 0
   powerUpMaximumWait: 0
   shipThrusterSpeed: 0
+  shipThrusterMaxSpeed: 0
   shipRotationSpeed: 0
   obstacleSpeed: 0

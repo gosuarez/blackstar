@@ -78,61 +78,6 @@ public class @PlayerController : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""2D Vector"",
-                    ""id"": ""0a6b1e9f-9f46-4d19-b22a-96deb36ab8c6"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Thruster"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""52e3627f-e3e1-451f-ad21-3c70d5015dd5"",
-                    ""path"": ""<Touchscreen>/press"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""TouchScreenMobile"",
-                    ""action"": ""Thruster"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""cfd2c3ab-04d7-4141-967c-79908f55b9f4"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""TouchScreenMobile"",
-                    ""action"": ""Thruster"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""82298dfd-1135-4868-a201-c591d1578ee0"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""TouchScreenMobile"",
-                    ""action"": ""Thruster"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""6b14fce8-84be-4e38-849a-442e68cfec45"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""TouchScreenMobile"",
-                    ""action"": ""Thruster"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": """",
                     ""id"": ""4eb3fadb-4cda-4314-a55f-c0c233da04c6"",
                     ""path"": ""<Gamepad>/leftStick"",
@@ -254,61 +199,6 @@ public class @PlayerController : IInputActionCollection, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""2D Vector"",
-                    ""id"": ""d19c259d-5e06-49af-82be-46f145580237"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Rotation"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""277e02de-897e-484a-82be-8bf86f7b3020"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""TouchScreenMobile"",
-                    ""action"": ""Rotation"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""84ba7e49-f240-4cb4-887f-73ee7d84309a"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""TouchScreenMobile"",
-                    ""action"": ""Rotation"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""eb08f23e-ab5b-41a7-b82d-94c59720a748"",
-                    ""path"": ""<Touchscreen>/primaryTouch"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""TouchScreenMobile"",
-                    ""action"": ""Rotation"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""cc0afd50-0ba8-4fb3-ba82-3b505e14e341"",
-                    ""path"": ""<Touchscreen>/primaryTouch"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""TouchScreenMobile"",
-                    ""action"": ""Rotation"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
                     ""name"": """",
                     ""id"": ""c87cd2a9-cf53-4735-991d-70d5557e3beb"",
                     ""path"": ""<Keyboard>/escape"",
@@ -356,17 +246,6 @@ public class @PlayerController : IInputActionCollection, IDisposable
             ""devices"": [
                 {
                     ""devicePath"": ""<XInputController>"",
-                    ""isOptional"": false,
-                    ""isOR"": false
-                }
-            ]
-        },
-        {
-            ""name"": ""TouchScreenMobile"",
-            ""bindingGroup"": ""TouchScreenMobile"",
-            ""devices"": [
-                {
-                    ""devicePath"": ""<Touchscreen>"",
                     ""isOptional"": false,
                     ""isOR"": false
                 }
@@ -489,15 +368,6 @@ public class @PlayerController : IInputActionCollection, IDisposable
         {
             if (m_GamepadSchemeIndex == -1) m_GamepadSchemeIndex = asset.FindControlSchemeIndex("Gamepad");
             return asset.controlSchemes[m_GamepadSchemeIndex];
-        }
-    }
-    private int m_TouchScreenMobileSchemeIndex = -1;
-    public InputControlScheme TouchScreenMobileScheme
-    {
-        get
-        {
-            if (m_TouchScreenMobileSchemeIndex == -1) m_TouchScreenMobileSchemeIndex = asset.FindControlSchemeIndex("TouchScreenMobile");
-            return asset.controlSchemes[m_TouchScreenMobileSchemeIndex];
         }
     }
     public interface IGameplayActions

@@ -1,6 +1,6 @@
-﻿#define ROCKETSHIPCONTROLLER_DEBUG
+﻿//#define ROCKETSHIPCONTROLLER_DEBUG
 
-using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -17,7 +17,9 @@ public class RocketShipController : MonoBehaviour
 
     private PlayerController _playerController;
     private float _movementSpeed;
+    private float _maxSpeed;
     private float _rotationSpeed;
+    private TMP_Text _text;
 
     public enum State
     {
@@ -47,6 +49,7 @@ public class RocketShipController : MonoBehaviour
     private int _consumedFuel = 1;
     private float _verticalMovement;
     private Vector2 _horizontalMovement;
+    private UnityEngine.InputSystem.Gyroscope _gyroscope;
 
     //These two action events are removed as they were replaced by an event broker
     //public event Action HitByObstacle;
@@ -56,24 +59,43 @@ public class RocketShipController : MonoBehaviour
 
     private void Awake()
     {
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
         _playerController = new PlayerController();
         _hudControllerGameLevels = FindObjectOfType<HUDControllerGameLevels>();
  
         _playerController.Gameplay.Thruster.performed += context => _verticalMovement = context.ReadValue<float>();
         _playerController.Gameplay.Thruster.canceled += context => _verticalMovement = 0;
         
+        //ACTIVATE FOR PC INPUT (GAMEPAD/MOUSE AND KEYBOARD)
         _playerController.Gameplay.Rotation.performed += context => _horizontalMovement = context.ReadValue<Vector2>();
         _playerController.Gameplay.Rotation.canceled += context => _horizontalMovement = Vector2.zero;
+        //ACTIVATE FOR PC INPUT (GAMEPAD/MOUSE AND KEYBOARD)
     }
 
     private void OnEnable()
     {
         _playerController.Gameplay.Enable();
+        
+        //ACTIVATE FOR MOBILE INPUT
+        if (UnityEngine.InputSystem.Gyroscope.current != null)
+        {
+            _gyroscope = UnityEngine.InputSystem.Gyroscope.current;
+            InputSystem.EnableDevice(_gyroscope);
+        }
+        //ACTIVATE FOR MOBILE INPUT
     }
 
     private void OnDisable()
     {
         _playerController.Gameplay.Disable();
+        
+        //ACTIVATE FOR MOBILE INPUT
+        if (UnityEngine.InputSystem.Gyroscope.current != null)
+        {
+            _gyroscope = UnityEngine.InputSystem.Gyroscope.current;
+            InputSystem.DisableDevice(_gyroscope);
+        }
+        //ACTIVATE FOR MOBILE INPUT
     }
     
     // Start is called before the first frame update
@@ -86,6 +108,7 @@ public class RocketShipController : MonoBehaviour
         _rocketShipAudioSource = GetComponent<AudioSource>();
         _thrusterParticleSystem = GetComponentInChildren<ParticleSystem>();
         _movementSpeed = DataManager.Instance.currentLevel.shipThrusterSpeed;
+        _maxSpeed = DataManager.Instance.currentLevel.shipThrusterMaxSpeed;
         _rotationSpeed = DataManager.Instance.currentLevel.shipRotationSpeed;
     }
     
@@ -99,6 +122,13 @@ public class RocketShipController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //ACTIVATE FOR MOBILE INPUT
+        if (_gyroscope != null)
+        {
+            _horizontalMovement = _gyroscope.angularVelocity.ReadValue();
+        }
+        //ACTIVATE FOR MOBILE INPUT
+        
         if (shipState == State.Alive)
         {
             
@@ -114,12 +144,13 @@ public class RocketShipController : MonoBehaviour
 
     private void RocketControllerMovement()
     {
-        //_verticalInput = Input.GetAxisRaw("Vertical");
-
-        //moves rocketship according to input and coordinate system
         if (_verticalMovement > 0 && _hudControllerGameLevels.currentFuelBar > 0 && !DataManager.Instance.pauseMenuActive)
+         
         {
-            _rigidbody.AddRelativeForce(Vector3.up * (_verticalMovement * _movementSpeed), ForceMode.Force);
+             _rigidbody.AddRelativeForce(Vector3.up * (_verticalMovement * _movementSpeed), ForceMode.Acceleration);
+
+             _rigidbody.velocity = Vector3.ClampMagnitude(_rigidbody.velocity, _maxSpeed);
+             
             _hudControllerGameLevels.UpdateFuelBar(_consumedFuel, false);
 
             if (!_rocketShipAudioSource.isPlaying)
@@ -145,52 +176,24 @@ public class RocketShipController : MonoBehaviour
         }
     }
     
-    private void RockectControllerRotation()
-    {
-        //_horizontalInput = Input.GetAxis("Horizontal");
-        _rigidbody.freezeRotation = true;
-
-        //rotates rocketship according to input
-        transform.Rotate(Vector3.back, _horizontalMovement.x * Time.deltaTime * _rotationSpeed);
-        _rigidbody.freezeRotation = false;
-    }
-    
-    // private void RocketControllerMovement()
-    // {
-    //     _verticalInput = Input.GetAxisRaw("Vertical");
-    //
-    //     //moves rocketship according to input and coordinate system
-    //     if (_verticalInput > 0 && _hudControllerGameLevels.currentFuelBar > 0 && !DataManager.Instance.pauseMenuActive)
-    //     {
-    //         _rigidbody.AddRelativeForce(Vector3.up * (_verticalInput * _movementSpeed), ForceMode.Force);
-    //         _hudControllerGameLevels.UpdateFuelBar(_consumedFuel, false);
-    //
-    //         if (!_rocketShipAudioSource.isPlaying)
-    //         {
-    //             _rocketShipAudioSource.PlayOneShot(AudioSFXController.DictionaryAudioClips["Rocket_Thruster"]);
-    //             _thrusterParticleSystem.Play();
-    //
-    //             //This is another way to play an array of audio clips. Replaced by a dictionary implementation.
-    //             //_audioSource.PlayOneShot(_audioController.audioClips[0]);
-    //
-    //             // foreach (var clip in _audioController.audioClips)
-    //             // {
-    //             //     if(clip.name == "Rocket_thruster_SFX")
-    //             //             _audioSource.PlayOneShot(clip);
-    //             // }
-    //         }
-    //     }
-    //
-    //     else
-    //     {
-    //         _rocketShipAudioSource.Stop();
-    //         _thrusterParticleSystem.Stop();
-    //     }
-    // }
-
     #endregion
 
     #region RocketShip Rotation
+    
+    private void RockectControllerRotation()
+    {
+        _rigidbody.freezeRotation = true;
+
+        // //ACTIVATE FOR MOBILE INPUT
+        // transform.Rotate(Vector3.back, _horizontalMovement.y * Time.deltaTime * _rotationSpeed);
+        // //ACTIVATE FOR MOBILE INPUT
+
+        //ACTIVATE FOR PC INPUT
+        transform.Rotate(Vector3.back, _horizontalMovement.x * Time.deltaTime * _rotationSpeed);
+        //ACTIVATE FOR PC INPUT
+        
+        _rigidbody.freezeRotation = false;
+    }
     
     #endregion
 
@@ -212,6 +215,7 @@ public class RocketShipController : MonoBehaviour
                 {
                     TakeHit();
                 }
+                
 #if ROCKETSHIPCONTROLLER_DEBUG
                 Debug.Log("Ship is on LaunchingPad");
 #endif
@@ -220,7 +224,6 @@ public class RocketShipController : MonoBehaviour
             case "LandingPad":
                 shipAction = Action.LaunchingPad;
                 _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
-                //_mainAudioSource.Stop();
                 _rocketShipAudioSource.Stop();
                 _thrusterParticleSystem.Stop();
                 AudioSFXController.Main_Play_One_Shot_Audio("Landing_Pad_Reached");
@@ -250,6 +253,7 @@ public class RocketShipController : MonoBehaviour
         {
             case "LaunchingPad":
                 shipAction = Action.Flying;
+                
 #if ROCKETSHIPCONTROLLER_DEBUG
                 Debug.Log("Ship is airborne");
 #endif

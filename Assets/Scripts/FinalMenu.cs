@@ -1,7 +1,5 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -48,18 +46,12 @@ public class FinalMenu : MonoBehaviour
     {
         CheckBestScoreBeforeExit();
         DataManager.Instance.ReStartGame(index);
-        //DataManager.Instance.currentScore = 0;
-        //DataManager.Instance.AssignLevelIndex(1);
-        //SceneManager.LoadScene(index);
     }
     
     public void MainMenu(int index)
     {
         CheckBestScoreBeforeExit();
         DataManager.Instance.ReStartGame(index);
-        //DataManager.Instance.currentScore = 0;
-        //DataManager.Instance.AssignLevelIndex(1);
-        //SceneManager.LoadScene(index);
     }
     
     

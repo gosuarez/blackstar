@@ -645,7 +645,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76c392e42b5098c458856cdf6ecaaaa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_FirstSelected: {fileID: 4094464498279019361}
+  m_FirstSelected: {fileID: 0}
   m_sendNavigationEvents: 1
   m_DragThreshold: 10
 --- !u!4 &267265452
@@ -7172,6 +7172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseScapeMenu: {fileID: 1458738929}
+  continueButton: {fileID: 981141819}
 --- !u!114 &2144918806
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7186,6 +7187,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   statusText: {fileID: 90778013}
   finalMenu: {fileID: 1432244165}
+  playAgain: {fileID: 4094464498279019363}
 --- !u!1001 &897800542694226949
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8252,6 +8254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseScapeMenu: {fileID: 0}
+  continueButton: {fileID: 0}
 --- !u!114 &7615206467515198392
 MonoBehaviour:
   m_ObjectHideFlags: 0

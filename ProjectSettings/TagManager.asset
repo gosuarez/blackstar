@@ -12,6 +12,7 @@ TagManager:
   - Obstacle
   - Rocket Ship
   - PauseScapeMenu
+  - Gyro_Text
   layers:
   - Default
   - TransparentFX

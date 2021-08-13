@@ -10,6 +10,7 @@ public class LevelDefinition : ScriptableObject
     public float powerUpMinimumWait;
     public float powerUpMaximumWait;
     [Range(0, 30)] public float shipThrusterSpeed;
+    [Range(0, 30)] public float shipThrusterMaxSpeed;
     [Range(0, 300)] public float shipRotationSpeed;
     public float obstacleSpeed;
 }
