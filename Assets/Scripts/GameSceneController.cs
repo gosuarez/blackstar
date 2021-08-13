@@ -1,7 +1,6 @@
 ﻿//#define GAMESCENECONTROLLER_DEBUG
 
 using System.Collections;
-using TMPro;
 using UnityEngine;
 
 public class GameSceneController : MonoBehaviour
@@ -9,7 +8,7 @@ public class GameSceneController : MonoBehaviour
     #region Singleton Declaration
     
     private static GameSceneController _instance;
-
+    
     public static GameSceneController Instance
     {
         get 

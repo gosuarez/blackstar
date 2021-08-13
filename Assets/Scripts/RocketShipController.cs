@@ -185,12 +185,17 @@ public class RocketShipController : MonoBehaviour
         _rigidbody.freezeRotation = true;
 
         // //ACTIVATE FOR MOBILE INPUT
-        // transform.Rotate(Vector3.back, _horizontalMovement.y * Time.deltaTime * _rotationSpeed);
+        if (_gyroscope != null)
+        {
+            transform.Rotate(Vector3.back, _horizontalMovement.y * Time.deltaTime * _rotationSpeed);
+        }
+        // //ACTIVATE FOR MOBILE INPUT
         // //ACTIVATE FOR MOBILE INPUT
 
-        //ACTIVATE FOR PC INPUT
-        transform.Rotate(Vector3.back, _horizontalMovement.x * Time.deltaTime * _rotationSpeed);
-        //ACTIVATE FOR PC INPUT
+        else
+        {
+            transform.Rotate(Vector3.back, _horizontalMovement.x * Time.deltaTime * _rotationSpeed);
+        }
         
         _rigidbody.freezeRotation = false;
     }
