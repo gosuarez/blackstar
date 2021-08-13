@@ -3,7 +3,16 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Friendly
+  - Terrain
+  - Enemy
+  - LandingPad
+  - LaunchingPad
+  - Obstacle
+  - Rocket Ship
+  - PauseScapeMenu
+  - Gyro_Text
   layers:
   - Default
   - TransparentFX
@@ -40,4 +49,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: First
+    uniqueID: 2072977963
+    locked: 0
+  - name: Second
+    uniqueID: 2391718119
     locked: 0
