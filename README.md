@@ -1,1 +1,3 @@
-CC#UGD3D_Boost_Particle
+Black Star is an action game that immerses players in the role of an intergalactic spacecraft captain. Players must use their piloting skills to navigate deadly obstacles while collecting valuable galactic gold and power-ups. The mission is clear: avoid obstacles to reach the destination with as much gold as possible before running out of fuel.
+
+This project provided an incredible opportunity to showcase my proficiency in scene management, persistent data handling, and object-oriented programming principles acquired during the Unity Junior Programmer Pathway. Black Star demonstrated my ability to create seamless scene transitions, maintain player data across sessions, and implement modular, maintainable code.
